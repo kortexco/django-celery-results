@@ -2,7 +2,9 @@
 
 from django.conf import settings
 from django.contrib import admin
+from django.core.paginator import Paginator
 from django.utils.translation import gettext_lazy as _
+from django.utils.functional import cached_property
 
 try:
     ALLOW_EDITS = settings.DJANGO_CELERY_RESULTS['ALLOW_EDITS']
@@ -12,9 +14,21 @@ except (AttributeError, KeyError):
 
 from .models import GroupResult, TaskResult
 
+class DumbPaginator(Paginator):
+    """
+    Paginator that does not count the rows in the table.
+    """
+    @cached_property
+    def count(self):
+        # Some large number
+        return 9999999999
+
+
 
 class TaskResultAdmin(admin.ModelAdmin):
     """Admin-interface for results of tasks."""
+
+    paginator = DumbPaginator
 
     model = TaskResult
     date_hierarchy = 'date_done'
@@ -74,6 +88,7 @@ admin.site.register(TaskResult, TaskResultAdmin)
 class GroupResultAdmin(admin.ModelAdmin):
     """Admin-interface for results  of grouped tasks."""
 
+    paginator = DumbPaginator
     model = GroupResult
     date_hierarchy = 'date_done'
     list_display = ('group_id', 'date_done')
