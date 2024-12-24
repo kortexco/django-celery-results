@@ -115,6 +115,12 @@ class TaskResult(models.Model):
                          name='django_cele_date_cr_f04a50_idx'),
             models.Index(fields=['date_done'],
                          name='django_cele_date_do_f59aad_idx'),
+            models.Index(fields=['periodic_task_name'],
+                         name='django_cele_periodi_0a0f9e_idx'),
+            models.Index(fields=['task_args'],
+                         name='django_cele_task_ar_0b3b3e_idx'),
+            models.Index(fields=['task_kwargs'],
+                         name='django_cele_task_kw_0b3b3e_idx'),
         ]
 
     def as_dict(self):
